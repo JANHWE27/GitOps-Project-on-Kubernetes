@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: cicd-app
-        image: janhavi2711/cicd-app:aaaecd3cbb59ca1861bb3b185c366f357c147d5a
+        image: janhavi2711/cicd-app:fce91078bd4021d42714a5aab02b9fe58479aef2
         ports:
         - containerPort: 3000
