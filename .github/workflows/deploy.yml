@@ -7,6 +7,8 @@ on:
     paths-ignore:
       - README.md
 
+  workflow_dispatch:
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -32,25 +34,24 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:latest
 
-    update-manifest:
-      runs-on: ubuntu-latest
-      needs: build-and-push
-      
-      steps:
-        - name: checkout code
-          uses: actions/checkout@v3
-          with:
-            token: ${{ secrets.PAT_GITHUB }}
+  update-manifest:
+    runs-on: ubuntu-latest
+    needs: build-and-push
 
-        - name: update-manifest
-          run: |
-            sed -i "s|image: janhavi2711/cicd-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:${{ github.sha }}|g" k8s/deployment.yaml
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_GITHUB }}
 
+      - name: Update Manifest
+        run: |
+          sed -i "s|image: janhavi2711/cicd-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:${{ github.sha }}|g" k8s/deployment.yaml
 
-        - name: Push to GitHub
-          run: |
-            git config --global user.name "JANHWE27"
-            git config --global user.email "Github@action.com"
-            git add k8s/deployment.yaml
-            git commit -m "chore: udpated docker tag to ${{ github.sha }} [skip ci]"
-            git push
+      - name: Push to GitHub
+        run: |
+          git config --global user.name "JANHWE27"
+          git config --global user.email "Github@action.com"
+          git add k8s/deployment.yaml
+          git commit -m "chore: updated docker tag to ${{ github.sha }} [skip ci]"
+          git push
