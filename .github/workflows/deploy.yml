@@ -44,7 +44,8 @@ jobs:
 
         - name: update-manifest
           run: |
-            sed -i "s|image: amitabhdevops/cicd-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:${{ github.sha }}|g" k8s/deployment.yaml
+            sed -i "s|image: janhavi2711/cicd-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/cicd-app:${{ github.sha }}|g" k8s/deployment.yaml
+
 
         - name: Push to GitHub
           run: |
